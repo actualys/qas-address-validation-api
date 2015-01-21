@@ -1,0 +1,9 @@
+{
+    "name": "actualys/qas-address-validation-api",
+    "version": "1.0.0",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
