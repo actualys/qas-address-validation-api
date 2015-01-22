@@ -8,15 +8,15 @@ use Actualys\QasAddressValidationApi\Model\QAAuthentication;
  * Class QAQueryHeader
  */
 class QAQueryHeader {
-  private $qaAuthentication;
-  private $security;
+  private $QAAuthentication;
+  private $Security;
 
   /**
    * @param $username
    * @param $password
    */
   public function __construct($username, $password) {
-    $this->qaAuthentication = new QAAuthentication($username, $password);
-    $this->security         = NULL;
+    $this->QAAuthentication = new QAAuthentication($username, $password);
+    $this->Security         = NULL;
   }
 }

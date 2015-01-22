@@ -17,7 +17,7 @@ class Address {
    * @param $tQAAddress
    */
   public function __construct(QuickAddress $qAddress) {
-    $this->addressLines = $qAddress->addressLine;
+    $this->saddressLines = $qAddress->addressLine;
     $this->overflow      = $qAddress->overflow;
     $this->truncated     = $qAddress->truncated;
     $this->dpvStatus     = $qAddress->dpvStatus;

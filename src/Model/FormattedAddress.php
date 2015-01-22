@@ -3,6 +3,8 @@
 namespace Actualys\QasAddressValidationApi\Model;
 
 use Actualys\QasAddressValidationApi\Model\QuickAddress;
+use Actualys\QasAddressValidationApi\Model\Address;
+
 /**
  * Class FormattedAddress
  */

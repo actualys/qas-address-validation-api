@@ -53,7 +53,7 @@ class Picklist {
       }
 
       else {
-        $this->items = array($picklist->picklistEntry);
+        $this->items = array($picklist->PicklistEntry);
       }
     }
   }
@@ -62,9 +62,9 @@ class Picklist {
    * @return bool
    */
   function isAutoStepinSingle() {
-    return ($this->total == 1 &&
-      $this->items[0]->canStep &&
-      !$this->items[0]->information);
+    return ($this->iTotal == 1 &&
+      $this->items[0]->CanStep &&
+      !$this->items[0]->Information);
   }
 
   /**
