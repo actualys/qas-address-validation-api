@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.qas.com/OnDemand-2011-03"
+                  xmlns:s1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  targetNamespace="http://www.qas.com/OnDemand-2011-03" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://www.qas.com/OnDemand-2011-03">
+            <s:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+            <s:element name="QACanSearch">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Engine" type="tns:EngineType"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Layout" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="EngineType">
+                <s:simpleContent>
+                    <s:extension base="tns:EngineEnumType">
+                        <s:attribute name="Flatten" type="s:boolean"/>
+                        <s:attribute name="Intensity" type="tns:EngineIntensityType"/>
+                        <s:attribute name="PromptSet" type="tns:PromptSetType"/>
+                        <s:attribute name="Threshold" type="s:positiveInteger"/>
+                        <s:attribute name="Timeout" type="s:nonNegativeInteger"/>
+                    </s:extension>
+                </s:simpleContent>
+            </s:complexType>
+            <s:simpleType name="EngineEnumType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="Singleline"/>
+                    <s:enumeration value="Typedown"/>
+                    <s:enumeration value="Verification"/>
+                    <s:enumeration value="Keyfinder"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:simpleType name="EngineIntensityType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="Exact"/>
+                    <s:enumeration value="Close"/>
+                    <s:enumeration value="Extensive"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:simpleType name="PromptSetType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="OneLine"/>
+                    <s:enumeration value="Default"/>
+                    <s:enumeration value="Generic"/>
+                    <s:enumeration value="Optimal"/>
+                    <s:enumeration value="Alternate"/>
+                    <s:enumeration value="Alternate2"/>
+                    <s:enumeration value="Alternate3"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="QASearchOk">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="IsOk" type="s:boolean"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="ErrorCode" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="unbounded" name="ErrorDetail" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="QAQueryHeader" type="tns:QAQueryHeader"/>
+            <s:complexType name="QAQueryHeader">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="QAAuthentication" type="tns:QAAuthentication"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Security" type="s1:SecurityHeaderType"/>
+                </s:sequence>
+                <s:anyAttribute/>
+            </s:complexType>
+            <s:complexType name="QAAuthentication">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="QAInformation" type="tns:QAInformation"/>
+            <s:complexType name="QAInformation">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="StateTransition" type="s:string"/>
+                    <s:element minOccurs="1" maxOccurs="1" name="CreditsUsed" type="s:long"/>
+                </s:sequence>
+                <s:anyAttribute/>
+            </s:complexType>
+            <s:element name="QAGetAddress">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Layout" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Moniker" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="Address">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="QAAddress" type="tns:QAAddressType"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="QAAddressType">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="AddressLine" type="tns:AddressLineType"/>
+                </s:sequence>
+                <s:attribute default="false" name="Overflow" type="s:boolean"/>
+                <s:attribute default="false" name="Truncated" type="s:boolean"/>
+                <s:attribute name="DPVStatus" type="tns:DPVStatusType"/>
+            </s:complexType>
+            <s:complexType name="AddressLineType">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Label" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Line" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="DataplusGroup" type="tns:DataplusGroupType"/>
+                </s:sequence>
+                <s:attribute default="Address" name="LineContent" type="tns:LineContentType"/>
+                <s:attribute default="false" name="Overflow" type="s:boolean"/>
+                <s:attribute default="false" name="Truncated" type="s:boolean"/>
+            </s:complexType>
+            <s:complexType name="DataplusGroupType">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="DataplusGroupItem" type="s:string"/>
+                </s:sequence>
+                <s:attribute name="GroupName" type="s:string"/>
+            </s:complexType>
+            <s:simpleType name="LineContentType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="None"/>
+                    <s:enumeration value="Address"/>
+                    <s:enumeration value="Name"/>
+                    <s:enumeration value="Ancillary"/>
+                    <s:enumeration value="DataPlus"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:simpleType name="DPVStatusType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="DPVNotConfigured"/>
+                    <s:enumeration value="DPVConfigured"/>
+                    <s:enumeration value="DPVConfirmed"/>
+                    <s:enumeration value="DPVConfirmedMissingSec"/>
+                    <s:enumeration value="DPVNotConfirmed"/>
+                    <s:enumeration value="DPVLocked"/>
+                    <s:enumeration value="DPVSeedHit"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="QAGetData">
+                <s:complexType>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QAData" type="tns:ArrayOfQADataSet"/>
+            <s:complexType name="ArrayOfQADataSet">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="DataSet" type="tns:QADataSet"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="QADataSet">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="QAGetExampleAddresses">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Layout" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QAExampleAddresses" type="tns:ArrayOfQAExampleAddress"/>
+            <s:complexType name="ArrayOfQAExampleAddress">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="ExampleAddress" type="tns:QAExampleAddress"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="QAExampleAddress">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Address" type="tns:QAAddressType"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="QAGetLayouts">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QALayouts" type="tns:ArrayOfQALayout"/>
+            <s:complexType name="ArrayOfQALayout">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="Layout" type="tns:QALayout"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="QALayout">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="QAGetLicenseInfo">
+                <s:complexType>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QALicenceInfo">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="WarningLevel" type="tns:LicenceWarningLevel"/>
+                        <s:element minOccurs="0" maxOccurs="unbounded" name="LicensedSet" type="tns:QALicensedSet"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:simpleType name="LicenceWarningLevel">
+                <s:restriction base="s:string">
+                    <s:enumeration value="None"/>
+                    <s:enumeration value="DataExpiring"/>
+                    <s:enumeration value="LicenceExpiring"/>
+                    <s:enumeration value="ClicksLow"/>
+                    <s:enumeration value="Evaluation"/>
+                    <s:enumeration value="NoClicks"/>
+                    <s:enumeration value="DataExpired"/>
+                    <s:enumeration value="EvalLicenceExpired"/>
+                    <s:enumeration value="FullLicenceExpired"/>
+                    <s:enumeration value="LicenceNotFound"/>
+                    <s:enumeration value="DataUnreadable"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:complexType name="QALicensedSet">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Copyright" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="BaseCountry" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Status" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Server" type="s:string"/>
+                    <s:element minOccurs="1" maxOccurs="1" name="WarningLevel" type="tns:LicenceWarningLevel"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="DaysLeft" type="s:nonNegativeInteger"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="DataDaysLeft" type="s:nonNegativeInteger"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="LicenceDaysLeft" type="s:nonNegativeInteger"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="QAGetPromptSet">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Engine" type="tns:EngineType"/>
+                        <s:element minOccurs="1" maxOccurs="1" name="PromptSet" type="tns:PromptSetType"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QAPromptSet">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="unbounded" name="Line" type="tns:PromptLine"/>
+                    </s:sequence>
+                    <s:attribute default="false" name="Dynamic" type="s:boolean"/>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="PromptLine">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Prompt" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="SuggestedInputLength" type="s:nonNegativeInteger"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Example" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="QAGetSystemInfo">
+                <s:complexType>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QASystemInfo" type="tns:ArrayOfString"/>
+            <s:complexType name="ArrayOfString">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="SystemInfo" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="QARefine">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Moniker" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Refinement" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Layout" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute name="Threshold" type="s:positiveInteger"/>
+                    <s:attribute name="Timeout" type="s:nonNegativeInteger"/>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="Picklist">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="QAPicklist" type="tns:QAPicklistType"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="QAPicklistType">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="FullPicklistMoniker" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="PicklistEntry" type="tns:PicklistEntryType"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Prompt" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Total" type="s:nonNegativeInteger"/>
+                </s:sequence>
+                <s:attribute default="false" name="AutoFormatSafe" type="s:boolean"/>
+                <s:attribute default="false" name="AutoFormatPastClose" type="s:boolean"/>
+                <s:attribute default="false" name="AutoStepinSafe" type="s:boolean"/>
+                <s:attribute default="false" name="AutoStepinPastClose" type="s:boolean"/>
+                <s:attribute default="false" name="LargePotential" type="s:boolean"/>
+                <s:attribute default="false" name="MaxMatches" type="s:boolean"/>
+                <s:attribute default="false" name="MoreOtherMatches" type="s:boolean"/>
+                <s:attribute default="false" name="OverThreshold" type="s:boolean"/>
+                <s:attribute default="false" name="Timeout" type="s:boolean"/>
+            </s:complexType>
+            <s:complexType name="PicklistEntryType">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="Moniker" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="PartialAddress" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Picklist" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Postcode" type="s:string"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="Score" type="s:nonNegativeInteger"/>
+                </s:sequence>
+                <s:attribute default="false" name="FullAddress" type="s:boolean"/>
+                <s:attribute default="false" name="Multiples" type="s:boolean"/>
+                <s:attribute default="false" name="CanStep" type="s:boolean"/>
+                <s:attribute default="false" name="AliasMatch" type="s:boolean"/>
+                <s:attribute default="false" name="PostcodeRecoded" type="s:boolean"/>
+                <s:attribute default="false" name="CrossBorderMatch" type="s:boolean"/>
+                <s:attribute default="false" name="DummyPOBox" type="s:boolean"/>
+                <s:attribute default="false" name="Name" type="s:boolean"/>
+                <s:attribute default="false" name="Information" type="s:boolean"/>
+                <s:attribute default="false" name="WarnInformation" type="s:boolean"/>
+                <s:attribute default="false" name="IncompleteAddr" type="s:boolean"/>
+                <s:attribute default="false" name="UnresolvableRange" type="s:boolean"/>
+                <s:attribute default="false" name="PhantomPrimaryPoint" type="s:boolean"/>
+                <s:attribute default="false" name="SubsidiaryData" type="s:boolean"/>
+                <s:attribute default="false" name="ExtendedData" type="s:boolean"/>
+                <s:attribute default="false" name="EnhancedData" type="s:boolean"/>
+            </s:complexType>
+            <s:element name="QASearch">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Engine" type="tns:EngineType"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Layout" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Search" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QASearchResult">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="QAPicklist" type="tns:QAPicklistType"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="QAAddress" type="tns:QAAddressType"/>
+                    </s:sequence>
+                    <s:attribute default="None" name="VerifyLevel" type="tns:VerifyLevelType"/>
+                </s:complexType>
+            </s:element>
+            <s:simpleType name="VerifyLevelType">
+                <s:restriction base="s:string">
+                    <s:enumeration value="None"/>
+                    <s:enumeration value="Verified"/>
+                    <s:enumeration value="InteractionRequired"/>
+                    <s:enumeration value="PremisesPartial"/>
+                    <s:enumeration value="StreetPartial"/>
+                    <s:enumeration value="Multiple"/>
+                    <s:enumeration value="VerifiedPlace"/>
+                    <s:enumeration value="VerifiedStreet"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:element name="QABulkSearch">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Engine" type="tns:EngineType"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Layout" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="BulkSearchTerm" type="tns:QASearchType"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="QASearchType">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="Search" type="s:string"/>
+                </s:sequence>
+                <s:attribute default="None" name="Count" type="s:string"/>
+            </s:complexType>
+            <s:element name="QABulkSearchResult">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="unbounded" name="BulkAddress"
+                                   type="tns:QABulkSearchItemType"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="BulkError" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="ErrorCode" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute default="None" name="Count" type="s:string"/>
+                    <s:attribute default="None" name="SearchCount" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="QABulkSearchItemType">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="1" name="QAAddress" type="tns:QAAddressType"/>
+                    <s:element minOccurs="0" maxOccurs="1" name="InputAddress" type="s:string"/>
+                </s:sequence>
+                <s:attribute name="VerifyLevel" type="tns:VerifyLevelType"/>
+            </s:complexType>
+            <s:element name="QAGetDataMapDetail">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="DataMap" type="s:string"/>
+                    </s:sequence>
+                    <s:attribute name="Localisation" type="s:string"/>
+                </s:complexType>
+            </s:element>
+            <s:element name="QADataMapDetail">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="1" maxOccurs="1" name="WarningLevel" type="tns:LicenceWarningLevel"/>
+                        <s:element minOccurs="0" maxOccurs="unbounded" name="LicensedSet" type="tns:QALicensedSet"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+        </s:schema>
+        <s:schema elementFormDefault="qualified"
+                  targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <s:complexType name="SecurityHeaderType">
+                <s:sequence>
+                    <s:any minOccurs="0" maxOccurs="unbounded"/>
+                </s:sequence>
+                <s:anyAttribute/>
+            </s:complexType>
+        </s:schema>
+    </wsdl:types>
+    <wsdl:message name="DoCanSearchSoapIn">
+        <wsdl:part name="QACanSearch" element="tns:QACanSearch"/>
+    </wsdl:message>
+    <wsdl:message name="DoCanSearchSoapOut">
+        <wsdl:part name="DoCanSearchResult" element="tns:QASearchOk"/>
+    </wsdl:message>
+    <wsdl:message name="DoCanSearchQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoCanSearchQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetAddressSoapIn">
+        <wsdl:part name="QAGetAddress" element="tns:QAGetAddress"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetAddressSoapOut">
+        <wsdl:part name="DoGetAddressResult" element="tns:Address"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetAddressQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetAddressQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataSoapIn">
+        <wsdl:part name="QAGetData" element="tns:QAGetData"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataSoapOut">
+        <wsdl:part name="DoGetDataResult" element="tns:QAData"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetExampleAddressesSoapIn">
+        <wsdl:part name="QAGetExampleAddresses" element="tns:QAGetExampleAddresses"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetExampleAddressesSoapOut">
+        <wsdl:part name="DoGetExampleAddressesResult" element="tns:QAExampleAddresses"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetExampleAddressesQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetExampleAddressesQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLayoutsSoapIn">
+        <wsdl:part name="QAGetLayouts" element="tns:QAGetLayouts"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLayoutsSoapOut">
+        <wsdl:part name="DoGetLayoutsResult" element="tns:QALayouts"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLayoutsQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLayoutsQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLicenseInfoSoapIn">
+        <wsdl:part name="QAGetLicenseInfo" element="tns:QAGetLicenseInfo"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLicenseInfoSoapOut">
+        <wsdl:part name="DoGetLicenseInfoResult" element="tns:QALicenceInfo"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLicenseInfoQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetLicenseInfoQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetPromptSetSoapIn">
+        <wsdl:part name="QAGetPromptSet" element="tns:QAGetPromptSet"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetPromptSetSoapOut">
+        <wsdl:part name="DoGetPromptSetResult" element="tns:QAPromptSet"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetPromptSetQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetPromptSetQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetSystemInfoSoapIn">
+        <wsdl:part name="QAGetSystemInfo" element="tns:QAGetSystemInfo"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetSystemInfoSoapOut">
+        <wsdl:part name="DoGetSystemInfoResult" element="tns:QASystemInfo"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetSystemInfoQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetSystemInfoQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoRefineSoapIn">
+        <wsdl:part name="QARefine" element="tns:QARefine"/>
+    </wsdl:message>
+    <wsdl:message name="DoRefineSoapOut">
+        <wsdl:part name="DoRefineResult" element="tns:Picklist"/>
+    </wsdl:message>
+    <wsdl:message name="DoRefineQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoRefineQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoSearchSoapIn">
+        <wsdl:part name="QASearch" element="tns:QASearch"/>
+    </wsdl:message>
+    <wsdl:message name="DoSearchSoapOut">
+        <wsdl:part name="DoSearchResult" element="tns:QASearchResult"/>
+    </wsdl:message>
+    <wsdl:message name="DoSearchQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoSearchQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoBulkSearchSoapIn">
+        <wsdl:part name="QABulkSearch" element="tns:QABulkSearch"/>
+    </wsdl:message>
+    <wsdl:message name="DoBulkSearchSoapOut">
+        <wsdl:part name="DoBulkSearchResult" element="tns:QABulkSearchResult"/>
+    </wsdl:message>
+    <wsdl:message name="DoBulkSearchQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoBulkSearchQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataMapDetailSoapIn">
+        <wsdl:part name="QAGetDataMapDetail" element="tns:QAGetDataMapDetail"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataMapDetailSoapOut">
+        <wsdl:part name="DoGetDataMapDetailResult" element="tns:QADataMapDetail"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataMapDetailQAInformation">
+        <wsdl:part name="QAInformation" element="tns:QAInformation"/>
+    </wsdl:message>
+    <wsdl:message name="DoGetDataMapDetailQAQueryHeader">
+        <wsdl:part name="QAQueryHeader" element="tns:QAQueryHeader"/>
+    </wsdl:message>
+    <wsdl:portType name="QASOnDemand">
+        <wsdl:operation name="DoCanSearch">
+            <wsdl:input message="tns:DoCanSearchSoapIn"/>
+            <wsdl:output message="tns:DoCanSearchSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetAddress">
+            <wsdl:input message="tns:DoGetAddressSoapIn"/>
+            <wsdl:output message="tns:DoGetAddressSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetData">
+            <wsdl:input message="tns:DoGetDataSoapIn"/>
+            <wsdl:output message="tns:DoGetDataSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetExampleAddresses">
+            <wsdl:input message="tns:DoGetExampleAddressesSoapIn"/>
+            <wsdl:output message="tns:DoGetExampleAddressesSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetLayouts">
+            <wsdl:input message="tns:DoGetLayoutsSoapIn"/>
+            <wsdl:output message="tns:DoGetLayoutsSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetLicenseInfo">
+            <wsdl:input message="tns:DoGetLicenseInfoSoapIn"/>
+            <wsdl:output message="tns:DoGetLicenseInfoSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetPromptSet">
+            <wsdl:input message="tns:DoGetPromptSetSoapIn"/>
+            <wsdl:output message="tns:DoGetPromptSetSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetSystemInfo">
+            <wsdl:input message="tns:DoGetSystemInfoSoapIn"/>
+            <wsdl:output message="tns:DoGetSystemInfoSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoRefine">
+            <wsdl:input message="tns:DoRefineSoapIn"/>
+            <wsdl:output message="tns:DoRefineSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoSearch">
+            <wsdl:input message="tns:DoSearchSoapIn"/>
+            <wsdl:output message="tns:DoSearchSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoBulkSearch">
+            <wsdl:input message="tns:DoBulkSearchSoapIn"/>
+            <wsdl:output message="tns:DoBulkSearchSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetDataMapDetail">
+            <wsdl:input message="tns:DoGetDataMapDetailSoapIn"/>
+            <wsdl:output message="tns:DoGetDataMapDetailSoapOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="QASOnDemand" type="tns:QASOnDemand">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="DoCanSearch">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoCanSearch" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoCanSearchQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoCanSearchQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetAddress">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetAddress" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetAddressQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetAddressQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetData">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetDataQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetDataQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetExampleAddresses">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetExampleAddresses" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetExampleAddressesQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetExampleAddressesQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetLayouts">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetLayouts" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetLayoutsQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetLayoutsQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetLicenseInfo">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetLicenseInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetLicenseInfoQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetLicenseInfoQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetPromptSet">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetPromptSet" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetPromptSetQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetPromptSetQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetSystemInfo">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetSystemInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetSystemInfoQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetSystemInfoQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoRefine">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoRefine" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoRefineQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoRefineQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoSearch">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoSearch" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoSearchQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoSearchQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoBulkSearch">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoBulkSearch" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoBulkSearchQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoBulkSearchQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetDataMapDetail">
+            <soap:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetDataMapDetail" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetDataMapDetailQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+                <soap:header message="tns:DoGetDataMapDetailQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="QASOnDemand1" type="tns:QASOnDemand">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="DoCanSearch">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoCanSearch" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoCanSearchQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoCanSearchQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetAddress">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetAddress" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetAddressQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetAddressQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetData">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetDataQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetDataQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetExampleAddresses">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetExampleAddresses" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetExampleAddressesQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetExampleAddressesQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetLayouts">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetLayouts" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetLayoutsQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetLayoutsQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetLicenseInfo">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetLicenseInfo" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetLicenseInfoQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetLicenseInfoQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetPromptSet">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetPromptSet" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetPromptSetQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetPromptSetQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetSystemInfo">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetSystemInfo" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetSystemInfoQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetSystemInfoQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoRefine">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoRefine" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoRefineQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoRefineQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoSearch">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoSearch" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoSearchQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoSearchQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoBulkSearch">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoBulkSearch" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoBulkSearchQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoBulkSearchQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DoGetDataMapDetail">
+            <soap12:operation soapAction="http://www.qas.com/OnDemand-2011-03/DoGetDataMapDetail" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetDataMapDetailQAQueryHeader" part="QAQueryHeader" use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+                <soap12:header message="tns:DoGetDataMapDetailQAInformation" part="QAInformation" use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="OnDemandIntermediaryV3">
+        <wsdl:port name="QASOnDemand" binding="tns:QASOnDemand">
+            <soap:address location="https://ws.ondemand.qas.com/ProOnDemand/V3/ProOnDemandService.asmx"/>
+        </wsdl:port>
+        <wsdl:port name="QASOnDemand1" binding="tns:QASOnDemand1">
+            <soap12:address location="https://ws.ondemand.qas.com/ProOnDemand/V3/ProOnDemandService.asmx"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

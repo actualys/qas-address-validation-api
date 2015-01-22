@@ -1,36 +1,40 @@
 <?php
 
+namespace Actualys\QasAddressValidationApi\Model;
+
+use Actualys\QasAddressValidationApi\Constant\QasConstant;
+use Actualys\QasAddressValidationApi\Model\QAQueryHeader;
 
 /**
  * Class QuickAddress
  */
 class QuickAddress {
-  public $sEngineType;
-  public $sConfigFile = "";
-  public $sConfigSection = "";
-  public $sEngineIntensity = "";
-  public $iThreshold = 0;
-  public $iTimeout = -1;
-  public $bFlatten = FALSE;
+  public $engineType;
+  public $configFile = "";
+  public $configSection = "";
+  public $engineIntensity = "";
+  public $threshold = 0;
+  public $timeout = -1;
+  public $flatten = FALSE;
   public $soap = NULL;
   public $username = NULL;
   public $password = NULL;
   public $namespace = NULL;
 
   /**
-   * @param $sEndpointURL
+   * @param $endpointURL
    * @param $username
    * @param $password
    * @param string $namespace
-   * @param string $sEngineType
+   * @param string $engineType
    * @param array $options
    */
   public function __construct(
-    $sEndpointURL,
+    $endpointURL,
     $username,
     $password,
     $namespace = 'http://www.qas.com/OnDemand-2011-03',
-    $sEngineType = 'Singleline',
+    $engineType = 'Singleline',
     $options = array(
       'trace'              => 1,
       'exceptions'         => 1,
@@ -44,13 +48,13 @@ class QuickAddress {
   ) {
 
     try {
-      $this->sEngineType = $sEngineType;
+      $this->engineType = $engineType;
       $this->namespace   = $namespace;
 
 
-      if (defined('CONTROL_PROXY_NAME')) {
-        $this->soap = new SoapClient(
-          $sEndpointURL,
+      if (!empty(QasConstant::CONTROL_PROXY_NAME)) {
+        $this->soap = new \SoapClient(
+          $endpointURL,
           array_merge(
             $options,
             array(
@@ -63,7 +67,7 @@ class QuickAddress {
         );
       }
       else {
-        $this->soap = new SoapClient($sEndpointURL, $options);
+        $this->soap = new \SoapClient($endpointURL, $options);
       }
 
       $this->username = $username;
@@ -75,7 +79,7 @@ class QuickAddress {
     } catch (\Exception $e) {
 
       $log = 'Empty soap error message';
-      if ($this->soap instanceof SoapClient) {
+      if ($this->soap instanceof \SoapClient) {
         $log = 'LAST REQUEST:  ' . $this->soap->__getLastRequest(
           ) . ' LAST RESPONSE: ' . $this->soap->__getLastResponse();
       }
@@ -94,9 +98,9 @@ class QuickAddress {
   private function build_auth_header() {
     $b = new QAQueryHeader($this->username, $this->password);
 
-    $authheader = new SoapHeader($this->namespace, 'QAQueryHeader', $b);
+    $authheader = new \SoapHeader($this->namespace, 'QAQueryHeader', $b);
 
-    if ($this->soap instanceof SoapClient) {
+    if ($this->soap instanceof \SoapClient) {
       $this->soap->__setSoapHeaders(array($authheader));
     }
   }
@@ -115,7 +119,7 @@ class QuickAddress {
       error_log($err, 0);
 
       $soapResult = NULL;
-      throw new Exception($err);
+      throw new \Exception($err);
     }
 
     return ($soapResult);
@@ -143,54 +147,7 @@ class QuickAddress {
     }
   }
 
-  /**
-   * @param $sType
-   */
-  public function setEngineType($sType) {
-    $this->sEngineType = $sType;
-  }
 
-  /**
-   * @param $sIntensity
-   */
-  public function setEngineIntensity($sIntensity) {
-    $this->sEngineIntensity = $sIntensity;
-  }
-
-  /**
-   * @param $iThreshold
-   */
-  public function setThreshold($iThreshold) {
-    $this->iThreshold = $iThreshold;
-  }
-
-  /**
-   * @param $iTimeout
-   */
-  public function setTimeout($iTimeout) {
-    $this->iTimeout = $iTimeout;
-  }
-
-  /**
-   * @param $bFlatten
-   */
-  public function setFlatten($bFlatten) {
-    $this->bFlatten = $bFlatten;
-  }
-
-  /**
-   * @param $sConfig
-   */
-  public function setConfigFile($sConfig) {
-    $this->sConfigFile = $sConfig;
-  }
-
-  /**
-   * @param $sSection
-   */
-  public function setConfigSection($sSection) {
-    $this->sConfigSection = $sSection;
-  }
 
   /**
    * @return array|null
@@ -199,7 +156,7 @@ class QuickAddress {
   public function getAllDataSets() {
     $this->build_auth_header();
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
 
@@ -228,7 +185,7 @@ class QuickAddress {
   public function getAllDataMapDetail($sID) {
     $this->build_auth_header();
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $result = $this->check_soap(
@@ -252,19 +209,19 @@ class QuickAddress {
 
 
   /**
-   * @param $sDataSetID
+   * @param $dataSetID
    * @return array
    * @throws Exception
    */
-  public function getLayouts($sDataSetID) {
+  public function getLayouts($dataSetID) {
     $this->build_auth_header();
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
 
     $result = $this->check_soap(
-      $this->soap->DoGetLayouts(array("Country" => $sDataSetID))
+      $this->soap->DoGetLayouts(array("Country" => $dataSetID))
     );
 
     if ($result != NULL) {
@@ -283,43 +240,43 @@ class QuickAddress {
   }
 
   /**
-   * @param $sDataSetID
+   * @param $dataSetID
    * @param $sLayoutName
-   * @param string $sPromptSet
+   * @param string $promptSet
    * @return mixed
    * @throws Exception
    */
   public function canSearch(
-    $sDataSetID,
-    $sLayoutName,
-    $sPromptSet = "Default"
+    $dataSetID,
+    $layoutName,
+    $promptSet = "Default"
   ) {
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
 
-    $aEngineOptions = array
+    $engineOptions = array
     (
-      "_"         => $this->sEngineType,
-      "Flatten"   => $this->bFlatten,
-      "PromptSet" => $sPromptSet
+      "_"         => $this->engineType,
+      "Flatten"   => $this->flatten,
+      "PromptSet" => $promptSet
     );
 
     $args = array
     (
-      "Country" => $sDataSetID,
-      "Engine"  => $aEngineOptions,
+      "Country" => $dataSetID,
+      "Engine"  => $engineOptions,
     );
 
 // Set flatten if not default
-    if ($this->bFlatten != NULL) {
-      $args["Flatten"] = $this->bFlatten;
+    if ($this->flatten != NULL) {
+      $args["Flatten"] = $this->flatten;
     }
 
 // Set layout (for verification engine) if not default
-    if ($sLayoutName != NULL) {
-      $args["Layout"] = $sLayoutName;
+    if ($layoutName != NULL) {
+      $args["Layout"] = $layoutName;
     }
     $this->build_auth_header();
 
@@ -328,103 +285,103 @@ class QuickAddress {
   }
 
   /**
-   * @param $sDataSetID
-   * @param $asSearch
-   * @param null $sPromptSet
-   * @param null $sVerifyLayout
-   * @param null $sRequestTag
+   * @param $dataSetID
+   * @param $search
+   * @param null $promptSet
+   * @param null $verifyLayout
+   * @param null $requestTag
    * @return SearchResult
    */
   public function search(
-    $sDataSetID,
-    $asSearch,
-    $sPromptSet = NULL,
-    $sVerifyLayout = NULL,
-    $sRequestTag = NULL
+    $dataSetID,
+    $search,
+    $promptSet = NULL,
+    $verifyLayout = NULL,
+    $requestTag = NULL
   ) {
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
-    $this->sDataSetID = $sDataSetID;
+    $this->dataSetID = $dataSetID;
 
 // Concatenate each line of input to a search string delimited by line separator characters
-    $sSearchString = "";
-    $bFirst        = TRUE;
+    $searchString = "";
+    $first        = TRUE;
 
-    if (isset($asSearch)) {
-      if (is_array($asSearch)) {
-        foreach ($asSearch AS $sSearch) {
-          if (!$bFirst) {
-            $sSearchString = $sSearchString . "|"; // todo: separator must be configurable
+    if (isset($search)) {
+      if (is_array($search)) {
+        foreach ($search AS $itemSearch) {
+          if (!$first) {
+            $searchString = $searchString . "|"; // todo: separator must be configurable
           }
 
-          $sSearchString = $sSearchString . $sSearch;
-          $bFirst        = FALSE;
+          $searchString = $searchString . $itemSearch;
+          $first        = FALSE;
         }
       }
       else {
-        $sSearchString = $asSearch;
+        $searchString= $search;
       }
     }
 
 
 // Set engine type and options - "_" is reserved by PHP SOAP to indicate the
 // tag value while the other elements of the array set attribute values
-    $aEngineOptions = array
+    $engineOptions = array
     (
-      "_"       => $this->sEngineType,
-      "Flatten" => $this->bFlatten
+      "_"       => $this->engineType,
+      "Flatten" => $this->flatten
     );
 
 // Set prompt set if not default
-    if ($sPromptSet != NULL) {
-      $aEngineOptions["PromptSet"] = $sPromptSet;
+    if ($promptSet != NULL) {
+      $engineOptions["PromptSet"] = $promptSet;
     }
 
 // Set threshold if not default
-    if ($this->iThreshold != 0) {
-      $aEngineOptions["Threshold"] = $this->iThreshold;
+    if ($this->threshold != 0) {
+      $engineOptions["Threshold"] = $this->threshold;
     }
 
 // Set timeout if not default
-    if ($this->iTimeout != -1) {
-      $aEngineOptions["Timeout"] = $this->iTimeout;
+    if ($this->timeout != -1) {
+      $engineOptions["Timeout"] = $this->timeout;
     }
 
 
 // Build main search arguments
     $args = array
     (
-      "Country" => $this->sDataSetID,
-      "Search"  => $sSearchString,
-      "Engine"  => $aEngineOptions
+      "Country" => $this->dataSetID,
+      "Search"  => $searchString,
+      "Engine"  => $engineOptions
     );
 
 // Are we using a non-default configuration file or section ?
 // then setup the appropriate tags
-    if ($this->sConfigFile != "" || $this->sConfigSection != "") {
-      $asConfig = array();
+    if ($this->configFile != "" || $this->configSection != "") {
+      $config = array();
 
-      if ($this->sConfigFile != "") {
-        $asConfig["IniFile"] = $this->sConfigFile;
+      if ($this->configFile != "") {
+        $config["IniFile"] = $this->configFile;
       }
 
-      if ($this->sConfigSection != "") {
-        $asConfig["IniSection"] = $this->sConfigSection;
+      if ($this->configSection != "") {
+        $config["IniSection"] = $this->configSection;
       }
 
-      $args["QAConfig"] = $asConfig;
+      $args["QAConfig"] = $config;
     }
 
 // Set layout (for verification engine) if not default
-    if ($sVerifyLayout != NULL) {
-      $args["Layout"] = $sVerifyLayout;
+    if ($verifyLayout != NULL) {
+      $args["Layout"] = $verifyLayout;
     }
 
 // Set request tag if supplied
-    if ($sRequestTag != NULL) {
-      $args["RequestTag"] = $sRequestTag;
+    if ($requestTag != NULL) {
+      $args["RequestTag"] = $requestTag;
     }
 
 // Perform the web service call and create a SearchResult instance with the result
@@ -435,94 +392,94 @@ class QuickAddress {
 
 
   /**
-   * @param $sDataSetID
-   * @param $asSearch
-   * @param null $sPromptSet
-   * @param null $sVerifyLayout
-   * @param null $sRequestTag
+   * @param $dataSetID
+   * @param $search
+   * @param null $promptSet
+   * @param null $verifyLayout
+   * @param null $requestTag
    * @return BulkSearchResult
    */
   public function bulkSearch(
-    $sDataSetID,
-    $asSearch,
-    $sPromptSet = NULL,
-    $sVerifyLayout = NULL,
-    $sRequestTag = NULL
+    $dataSetID,
+    $search,
+    $promptSet = NULL,
+    $verifyLayout = NULL,
+    $requestTag = NULL
   ) {
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
-    $this->sDataSetID = $sDataSetID;
+    $this->dataSetID = $dataSetID;
 
 // Concatenate each line of input to a search string delimited by line separator characters
-    $sSearchString = "";
+    $searchString = "";
     $bFirst        = TRUE;
 
 // Set engine type and options - "_" is reserved by PHP SOAP to indicate the
 // tag value while the other elements of the array set attribute values
-    $aEngineOptions = array
+    $engineOptions = array
     (
-      "_"       => $this->sEngineType,
-      "Flatten" => $this->bFlatten
+      "_"       => $this->engineType,
+      "Flatten" => $this->flatten
     );
 
 // Set prompt set if not default
-    if ($sPromptSet != NULL) {
-      $aEngineOptions["PromptSet"] = $sPromptSet;
+    if ($promptSet != NULL) {
+      $engineOptions["PromptSet"] = $promptSet;
     }
 
 // Set threshold if not default
-    if ($this->iThreshold != 0) {
-      $aEngineOptions["Threshold"] = $this->iThreshold;
+    if ($this->threshold != 0) {
+      $engineOptions["Threshold"] = $this->threshold;
     }
 
 // Set timeout if not default
-    if ($this->iTimeout != -1) {
-      $aEngineOptions["Timeout"] = $this->iTimeout;
+    if ($this->timeout != -1) {
+      $engineOptions["Timeout"] = $this->timeout;
     }
 
 
 // Build main search arguments
     $args = array
     (
-      "Country" => $this->sDataSetID,
-      "Engine"  => $aEngineOptions
+      "Country" => $this->dataSetID,
+      "Engine"  => $engineOptions
     );
 
 // Are we using a non-default configuration file or section ?
 // then setup the appropriate tags
-    if ($this->sConfigFile != "" || $this->sConfigSection != "") {
-      $asConfig = array();
+    if ($this->configFile != "" || $this->configSection != "") {
+      $config = array();
 
-      if ($this->sConfigFile != "") {
-        $asConfig["IniFile"] = $this->sConfigFile;
+      if ($this->configFile != "") {
+        $config["IniFile"] = $this->configFile;
       }
 
-      if ($this->sConfigSection != "") {
-        $asConfig["IniSection"] = $this->sConfigSection;
+      if ($this->configSection != "") {
+        $config["IniSection"] = $this->configSection;
       }
 
-      $args["QAConfig"] = $asConfig;
+      $args["QAConfig"] = $config;
     }
 
-    if ($asSearch != "") {
-      $asSearchTerm = array();
+    if ($search != "") {
+      $searchTerm = array();
 
-      $asSearchTerm["Search"] = $asSearch;
-      $asSearchTerm["Count"]  = sizeof($asSearch);
-      $args["BulkSearchTerm"] = $asSearchTerm;
+      $searchTerm["Search"] = $search;
+      $searchTerm["Count"]  = sizeof($search);
+      $args["BulkSearchTerm"] = $searchTerm;
     }
 
 
 // Set layout (for verification engine) if not default
-    if ($sVerifyLayout != NULL) {
-      $args["Layout"] = $sVerifyLayout;
+    if ($verifyLayout != NULL) {
+      $args["Layout"] = $verifyLayout;
     }
 
 // Set request tag if supplied
-    if ($sRequestTag != NULL) {
-      $args["RequestTag"] = $sRequestTag;
+    if ($requestTag != NULL) {
+      $args["RequestTag"] = $requestTag;
     }
 
 // Perform the web service call and create a SearchResult instance with the result
@@ -532,29 +489,29 @@ class QuickAddress {
   }
 
   /**
-   * @param $sDataSetID
-   * @param $asSearch
-   * @param null $sPromptSet
-   * @param null $sRequestTag
+   * @param $dataSetID
+   * @param $search
+   * @param null $promptSet
+   * @param null $requestTag
    * @return Picklist
    */
   public function searchSingleline(
-    $sDataSetID,
-    $asSearch,
-    $sPromptSet = NULL,
-    $sRequestTag = NULL
+    $dataSetID,
+    $search,
+    $promptSet = NULL,
+    $requestTag = NULL
   ) {
-    $engineOld         = $this->sEngineType;
-    $this->sEngineType = "Singleline";
+    $engineOld         = $this->engineType;
+    $this->engineType = "Singleline";
 
     $searchResult      = $this->search(
-      $sDataSetID,
-      $asSearch,
-      $sPromptSet,
+      $dataSetID,
+      $search,
+      $promptSet,
       NULL,
-      $sRequestTag
+      $requestTag
     );
-    $this->sEngineType = $engineOld;
+    $this->engineType = $engineOld;
 
     return ($searchResult->picklist);
   }
@@ -562,11 +519,11 @@ class QuickAddress {
   /**
    * @param $sMoniker
    * @param $sRefinementText
-   * @param null $sRequestTag
+   * @param null $requestTag
    * @return Picklist
    */
-  public function refine($sMoniker, $sRefinementText, $sRequestTag = NULL) {
-    if (!$this->soap instanceof SoapClient) {
+  public function refine($sMoniker, $sRefinementText, $requestTag = NULL) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $args = array
@@ -575,17 +532,17 @@ class QuickAddress {
       "Refinement" => $sRefinementText
     );
 
-    if ($this->iThreshold != 0) {
-      $args["Threshold"] = $this->iThreshold;
+    if ($this->threshold != 0) {
+      $args["Threshold"] = $this->threshold;
     }
 
-    if ($this->iTimeout != -1) {
-      $args["Timeout"] = $this->iTimeout;
+    if ($this->timeout != -1) {
+      $args["Timeout"] = $this->timeout;
     }
 
 // Set request tag if supplied
-    if ($sRequestTag != NULL) {
-      $args["RequestTag"] = $sRequestTag;
+    if ($requestTag != NULL) {
+      $args["RequestTag"] = $requestTag;
     }
 
     $this->build_auth_header();
@@ -595,12 +552,12 @@ class QuickAddress {
 
   /**
    * @param $sMoniker
-   * @param null $sRequestTag
+   * @param null $requestTag
    * @return Picklist
    */
-  public function stepIn($sMoniker, $sRequestTag = NULL) {
+  public function stepIn($sMoniker, $requestTag = NULL) {
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
 // A stepin simply creates a picklist from the supplied moniker with a null refinement
@@ -611,17 +568,17 @@ class QuickAddress {
     );
 
 // If the threshold or timeout values are not default then specify them
-    if ($this->iThreshold != 0) {
-      $args["Threshold"] = $this->iThreshold;
+    if ($this->threshold != 0) {
+      $args["Threshold"] = $this->threshold;
     }
 
-    if ($this->iTimeout != -1) {
-      $args["Timeout"] = $this->iTimeout;
+    if ($this->timeout != -1) {
+      $args["Timeout"] = $this->timeout;
     }
 
 // Set request tag if supplied
-    if ($sRequestTag != NULL) {
-      $args["RequestTag"] = $sRequestTag;
+    if ($requestTag != NULL) {
+      $args["RequestTag"] = $requestTag;
     }
 
     $this->build_auth_header();
@@ -630,28 +587,28 @@ class QuickAddress {
   }
 
   /**
-   * @param $sDataSetID
-   * @param string $sPromptSet
+   * @param $dataSetID
+   * @param string $promptSet
    * @param string $sEngine
    * @return null|PromptSet
    * @throws Exception
    */
   public function getPromptSet(
-    $sDataSetID,
-    $sPromptSet = "Default",
+    $dataSetID,
+    $promptSet = "Default",
     $sEngine = "Singleline"
   ) {
     $this->build_auth_header();
 
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $ret = $this->check_soap(
       $this->soap->DoGetPromptSet(
         array
         (
-          "Country"   => $sDataSetID,
-          "PromptSet" => $sPromptSet,
+          "Country"   => $dataSetID,
+          "PromptSet" => $promptSet,
           "Engine"    => $sEngine
         )
       )
@@ -663,15 +620,15 @@ class QuickAddress {
   /**
    * @param $sLayoutName
    * @param $sMoniker
-   * @param null $sRequestTag
+   * @param null $requestTag
    * @return FormattedAddress
    */
   public function getFormattedAddress(
     $sLayoutName,
     $sMoniker,
-    $sRequestTag = NULL
+    $requestTag = NULL
   ) {
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $args = array
@@ -681,8 +638,8 @@ class QuickAddress {
     );
 
     // Set request tag if supplied
-    if ($sRequestTag != NULL) {
-      $args["RequestTag"] = $sRequestTag;
+    if ($requestTag != NULL) {
+      $args["RequestTag"] = $requestTag;
     }
 
     $this->build_auth_header();
@@ -693,17 +650,17 @@ class QuickAddress {
   }
 
   /**
-   * @param $sDataSetID
+   * @param $dataSetID
    * @return array
    * @throws Exception
    */
-  public function getAllLayouts($sDataSetID) {
-    if (!$this->soap instanceof SoapClient) {
+  public function getAllLayouts($dataSetID) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $this->build_auth_header();
     $result = $this->check_soap(
-      $this->soap->DoGetLayouts(array("Country" => $sDataSetID))
+      $this->soap->DoGetLayouts(array("Country" => $dataSetID))
     );
 
     if ($result != NULL) {
@@ -720,29 +677,29 @@ class QuickAddress {
   }
 
   /**
-   * @param $sDataSetID
+   * @param $dataSetID
    * @param $sLayoutName
-   * @param null $sRequestTag
+   * @param null $requestTag
    * @return Examples
    * @throws Exception
    */
   public function getExampleAddresses(
-    $sDataSetID,
+    $dataSetID,
     $sLayoutName,
-    $sRequestTag = NULL
+    $requestTag = NULL
   ) {
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $args = array
     (
-      "Country" => $sDataSetID,
+      "Country" => $dataSetID,
       "Layout"  => $sLayoutName
     );
 
 // Set request tag if supplied
-    if ($sRequestTag != NULL) {
-      $args["RequestTag"] = $sRequestTag;
+    if ($requestTag != NULL) {
+      $args["RequestTag"] = $requestTag;
     }
 
     $this->build_auth_header();
@@ -757,7 +714,7 @@ class QuickAddress {
    * @throws Exception
    */
   public function getLicenceInfo() {
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $this->build_auth_header();
@@ -781,7 +738,7 @@ class QuickAddress {
    * @throws Exception
    */
   public function getSystemInfo() {
-    if (!$this->soap instanceof SoapClient) {
+    if (!$this->soap instanceof \SoapClient) {
       return NULL;
     }
     $this->build_auth_header();

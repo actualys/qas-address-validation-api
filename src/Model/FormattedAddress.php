@@ -1,6 +1,8 @@
 <?php
 
+namespace Actualys\QasAddressValidationApi\Model;
 
+use Actualys\QasAddressValidationApi\Model\QuickAddress;
 /**
  * Class FormattedAddress
  */
@@ -12,7 +14,7 @@ class FormattedAddress
    */
   public function __construct($result) {
     if (QuickAddress::check_soap($result) != NULL) {
-      parent::__construct($result->QAAddress);
+      parent::__construct($result->qAddress);
     }
   }
 }

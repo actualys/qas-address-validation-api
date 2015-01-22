@@ -1,18 +1,22 @@
 <?php
 
+
+namespace Actualys\QasAddressValidationApi\Model;
+
+
 /**
  * Class QAAuthentication
  */
 class QAAuthentication {
-  private $Username;
-  private $Password;
+  private $username;
+  private $password;
 
   /**
    * @param $username
    * @param $password
    */
   public function __construct($username, $password) {
-    $this->Username = $username;
-    $this->Password = $password;
+    $this->username = $username;
+    $this->password = $password;
   }
 }
