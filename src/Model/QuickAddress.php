@@ -116,7 +116,6 @@ class QuickAddress {
 
       error_log($err, 0);
 
-      $soapResult = NULL;
       throw new Exception($err);
     }
 
@@ -456,10 +455,6 @@ class QuickAddress {
       return NULL;
     }
     $this->sDataSetID = $sDataSetID;
-
-// Concatenate each line of input to a search string delimited by line separator characters
-    $sSearchString = "";
-    $bFirst        = TRUE;
 
 // Set engine type and options - "_" is reserved by PHP SOAP to indicate the
 // tag value while the other elements of the array set attribute values
