@@ -34,8 +34,8 @@ class Picklist {
       $this->total               = $picklist->Total;
       $this->prompt              = $picklist->Prompt;
       $this->picklistMoniker     = $picklist->FullPicklistMoniker;
-      $this->isTimeout            = $picklist->Timeout;
-      $this->isMaxMatches         = $picklist->MaxMatches;
+      $this->isTimeout           = $picklist->Timeout;
+      $this->isMaxMatches        = $picklist->MaxMatches;
       $this->overThreshold       = $picklist->OverThreshold;
       $this->largePotential      = $picklist->LargePotential;
       $this->moreOtherMatches    = $picklist->MoreOtherMatches;
@@ -62,7 +62,7 @@ class Picklist {
    * @return bool
    */
   function isAutoStepinSingle() {
-    return ($this->iTotal == 1 &&
+    return ($this->total == 1 &&
       $this->items[0]->CanStep &&
       !$this->items[0]->Information);
   }

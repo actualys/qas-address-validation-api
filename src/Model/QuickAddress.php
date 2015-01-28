@@ -10,6 +10,7 @@ class QuickAddress {
   public $sConfigFile = "";
   public $sConfigSection = "";
   public $sEngineIntensity = "";
+  public $sDataSetID = "";
   public $iThreshold = 0;
   public $iTimeout = -1;
   public $bFlatten = FALSE;

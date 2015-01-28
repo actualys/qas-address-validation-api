@@ -3,6 +3,7 @@
 namespace Actualys\QasAddressValidationApi\Model;
 
 use Actualys\QasAddressValidationApi\Model\QuickAddress;
+
 /**
  * Class Address
  */
@@ -14,13 +15,13 @@ class Address {
   public $dpvStatus;
 
   /**
-   * @param $tQAAddress
+   * @param QuickAddress $qAddress
    */
   public function __construct(QuickAddress $qAddress) {
-    $this->saddressLines = $qAddress->addressLine;
-    $this->overflow      = $qAddress->overflow;
-    $this->truncated     = $qAddress->truncated;
-    $this->dpvStatus     = $qAddress->dpvStatus;
+    $this->addressLines = $qAddress->addressLine;
+    $this->overflow     = $qAddress->overflow;
+    $this->truncated    = $qAddress->truncated;
+    $this->dpvStatus    = $qAddress->dpvStatus;
 
     if (!is_array($this->addressLines)) {
       $this->addressLines = array($this->addressLines);
