@@ -1,6 +1,7 @@
 {
     "name": "actualys/qas-address-validation-api",
     "description": "Php API for QAS Address validation service",
+    "keywords": ["qas", "address", "api", "address valisation", "drupal"],
     "authors": [
         {
             "name": "Cedric Mefferte",
