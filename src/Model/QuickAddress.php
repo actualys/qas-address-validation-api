@@ -2,6 +2,7 @@
 
 namespace Actualys\QasAddressValidationApi\Model;
 
+use Actualys\QasAddressValidationApi\Model\SearchResult;
 /**
  * Class QuickAddress
  */

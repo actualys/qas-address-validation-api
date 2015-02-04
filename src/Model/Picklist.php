@@ -8,19 +8,19 @@ use Actualys\QasAddressValidationApi\Model\QuickAddress;
  * Class Picklist
  */
 class Picklist {
-  public $total = 0;
-  public $picklistMoniker = "";
-  public $prompt = "No Items";
-  public $items = array();
+  public $iTotal = 0;
+  public $sPicklistMoniker = "";
+  public $sPrompt = "No Items";
+  public $atItems = array();
   public $isTimeout;
   public $isMaxMatches;
-  public $overThreshold;
-  public $largePotential;
-  public $moreOtherMatches;
-  public $autoStepinSafe;
-  public $autoStepinPastClose;
-  public $autoFormatSafe;
-  public $autoFormatPastClose;
+  public $bOverThreshold;
+  public $bLargePotential;
+  public $bMoreOtherMatches;
+  public $bAutoStepinSafe;
+  public $bAutoStepinPastClose;
+  public $bAutoFormatSafe;
+  public $bAutoFormatPastClose;
 
   /**
    * @param $result
@@ -29,51 +29,47 @@ class Picklist {
   public function __construct($result) {
     if (QuickAddress::check_soap(
         $result
-      ) != NULL && ($picklist = $result->qaPicklist) != NULL
+      ) != NULL && ($tPicklist = $result->QAPicklist) != NULL
     ) {
-      $this->total               = $picklist->Total;
-      $this->prompt              = $picklist->Prompt;
-      $this->picklistMoniker     = $picklist->FullPicklistMoniker;
-      $this->isTimeout            = $picklist->Timeout;
-      $this->isMaxMatches         = $picklist->MaxMatches;
-      $this->overThreshold       = $picklist->OverThreshold;
-      $this->largePotential      = $picklist->LargePotential;
-      $this->moreOtherMatches    = $picklist->MoreOtherMatches;
-      $this->autoStepinSafe      = $picklist->AutoStepinSafe;
-      $this->autoStepinPastClose = $picklist->AutoStepinPastClose;
-      $this->autoFormatSafe      = $picklist->AutoFormatSafe;
-      $this->autoFormatPastClose = $picklist->AutoFormatPastClose;
 
-      if (!isset($picklist->picklistEntry)) {
-        $this->items = array();
+      $this->iTotal               = $tPicklist->Total;
+      $this->sPrompt              = $tPicklist->Prompt;
+      $this->sPicklistMoniker     = $tPicklist->FullPicklistMoniker;
+      $this->isTimeout            = $tPicklist->Timeout;
+      $this->isMaxMatches         = $tPicklist->MaxMatches;
+      $this->bOverThreshold       = $tPicklist->OverThreshold;
+      $this->bLargePotential      = $tPicklist->LargePotential;
+      $this->bMoreOtherMatches    = $tPicklist->MoreOtherMatches;
+      $this->bAutoStepinSafe      = $tPicklist->AutoStepinSafe;
+      $this->bAutoStepinPastClose = $tPicklist->AutoStepinPastClose;
+      $this->bAutoFormatSafe      = $tPicklist->AutoFormatSafe;
+      $this->bAutoFormatPastClose = $tPicklist->AutoFormatPastClose;
+
+      if (!isset($tPicklist->PicklistEntry)) {
+        $this->atItems = array();
       }
 
-      elseif (is_array($picklist->picklistEntry)) {
-        $this->items = $picklist->picklistEntry;
+      elseif (is_array($tPicklist->PicklistEntry)) {
+        $this->atItems = $tPicklist->PicklistEntry;
       }
 
       else {
-        $this->items = array($picklist->PicklistEntry);
+        $this->atItems = array($tPicklist->PicklistEntry);
       }
     }
   }
 
-  /**
-   * @return bool
-   */
-  function isAutoStepinSingle() {
+
+  public function isAutoStepinSingle() {
     return ($this->iTotal == 1 &&
-      $this->items[0]->CanStep &&
-      !$this->items[0]->Information);
+      $this->atItems[0]->CanStep &&
+      !$this->atItems[0]->Information);
   }
 
-  /**
-   * @return bool
-   */
-  function isAutoFormatSingle() {
-    return ($this->total == 1 &&
-      $this->items[0]->fullAddress &&
-      !$this->items[0]->information);
+  public function isAutoFormatSingle() {
+    return ($this->iTotal == 1 &&
+      $this->atItems[0]->FullAddress &&
+      !$this->atItems[0]->Information);
   }
 }
 

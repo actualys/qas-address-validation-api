@@ -16,7 +16,7 @@ class FormattedAddress
    */
   public function __construct($result) {
     if (QuickAddress::check_soap($result) != NULL) {
-      parent::__construct($result->qAddress);
+      parent::__construct($result->QAAddress);
     }
   }
 }

@@ -8,7 +8,7 @@ namespace Actualys\QasAddressValidationApi\Model;
 class SearchResult {
   public $picklist;
   public $address;
-  public $verifyLevel;
+  public $sVerifyLevel;
 
   /**
    * @param $result
@@ -16,15 +16,15 @@ class SearchResult {
    */
   public function __construct($result) {
     if (QuickAddress::check_soap($result) != NULL) {
-      if (isset($result->qaPicklist)) {
+      if (isset($result->QAPicklist)) {
         $this->picklist = new Picklist($result);
       }
 
-      if (isset($result->qaAddress)) {
+      if (isset($result->QAAddress)) {
         $this->address = new FormattedAddress($result);
       }
 
-      $this->verifyLevel = $result->verifyLevel;
+      $this->sVerifyLevel = $result->VerifyLevel;
     }
   }
 }

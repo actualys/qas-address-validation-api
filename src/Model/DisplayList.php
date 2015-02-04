@@ -7,81 +7,82 @@ namespace Actualys\QasAddressValidationApi\Model;
  * Class DisplayList
  */
 class DisplayList {
-  public $moniker;
-  public $command;
-  public $preview;
-  public $postcode;
-  public $score;
+  public $sMoniker;
+  public $sCommand;
+  public $sPreview;
+  public $sPostcode;
+  public $sScore;
 
   /**
    * @return mixed
    */
-  public function getCommand() {
-    return $this->command;
+  public function getSCommand() {
+    return $this->sCommand;
   }
 
   /**
-   * @param mixed $command
+   * @param mixed $sCommand
    */
-  public function setCommand($command) {
-    $this->command = $command;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getMoniker() {
-    return $this->moniker;
-  }
-
-  /**
-   * @param mixed $moniker
-   */
-  public function setMoniker($moniker) {
-    $this->moniker = $moniker;
+  public function setSCommand($sCommand) {
+    $this->sCommand = $sCommand;
   }
 
   /**
    * @return mixed
    */
-  public function getPostcode() {
-    return $this->postcode;
+  public function getSMoniker() {
+    return $this->sMoniker;
   }
 
   /**
-   * @param mixed $postcode
+   * @param mixed $sMoniker
    */
-  public function setPostcode($postcode) {
-    $this->postcode = $postcode;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getPreview() {
-    return $this->preview;
-  }
-
-  /**
-   * @param mixed $preview
-   */
-  public function setPreview($preview) {
-    $this->preview = $preview;
+  public function setSMoniker($sMoniker) {
+    $this->sMoniker = $sMoniker;
   }
 
   /**
    * @return mixed
    */
-  public function getScore() {
-    return $this->score;
+  public function getSPostcode() {
+    return $this->sPostcode;
   }
 
   /**
-   * @param mixed $score
+   * @param mixed $sPostcode
    */
-  public function setScore($score) {
-    $this->score = $score;
+  public function setSPostcode($sPostcode) {
+    $this->sPostcode = $sPostcode;
   }
+
+  /**
+   * @return mixed
+   */
+  public function getSPreview() {
+    return $this->sPreview;
+  }
+
+  /**
+   * @param mixed $sPreview
+   */
+  public function setSPreview($sPreview) {
+    $this->sPreview = $sPreview;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getSScore() {
+    return $this->sScore;
+  }
+
+  /**
+   * @param mixed $sScore
+   */
+  public function setSScore($sScore) {
+    $this->sScore = $sScore;
+  }
+
 
 
 }

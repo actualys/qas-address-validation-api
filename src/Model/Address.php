@@ -3,35 +3,37 @@
 namespace Actualys\QasAddressValidationApi\Model;
 
 use Actualys\QasAddressValidationApi\Model\QuickAddress;
+
 /**
  * Class Address
  */
 class Address {
 
-  public $addressLines;
-  public $overflow;
-  public $truncated;
-  public $dpvStatus;
+  public $AddressLine;
+  public $Overflow;
+  public $Truncated;
+  public $DPVStatus;
 
   /**
    * @param $tQAAddress
    */
-  public function __construct(QuickAddress $qAddress) {
-    $this->saddressLines = $qAddress->addressLine;
-    $this->overflow      = $qAddress->overflow;
-    $this->truncated     = $qAddress->truncated;
-    $this->dpvStatus     = $qAddress->dpvStatus;
+  public function __construct($tQAAddress) {
 
-    if (!is_array($this->addressLines)) {
-      $this->addressLines = array($this->addressLines);
+    $this->atAddressLines = $tQAAddress->AddressLine;
+    $this->bOverflow      = $tQAAddress->Overflow;
+    $this->bTruncated     = $tQAAddress->Truncated;
+    $this->sDpvStatus     = $tQAAddress->DPVStatus;
+
+    if (!is_array($this->atAddressLines)) {
+      $this->atAddressLines = array($this->atAddressLines);
     }
 
-    for ($i = 0; $i < sizeof($this->addressLines); $i++) {
-      if (isset($this->addressLines[$i]->dataplusGroup) && !is_array(
-          $this->addressLines[$i]->dataplusGroup
+    for ($i = 0; $i < sizeof($this->atAddressLines); $i++) {
+      if (isset($this->atAddressLines[$i]->DataplusGroup) && !is_array(
+          $this->atAddressLines[$i]->DataplusGroup
         )
       ) {
-        $this->addressLines[$i]->dataplusGroup = array($this->addressLines[$i]->dataplusGroup);
+        $this->atAddressLines[$i]->DataplusGroup = array($this->atAddressLines[$i]->DataplusGroup);
       }
     }
   }
