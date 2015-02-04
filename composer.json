@@ -9,10 +9,11 @@
         }
     ],
     "minimum-stability": "dev",
+    "homepage": "http://www.actualys.com",
     "version": "0.1.0",
     "license" : "GPL-2.0",
     "autoload": {
-        "psr-0": { "Actualys\\QasAddressValidationApi": "src/" }
+        "psr-0": { "Actualys\\Bundle\\QasAddressValidationApi": "" }
     },
-    "target-dir": "Actualys/QasAddressValidationApi"
+    "target-dir": "Actualys/Bundle/QasAddressValidationApi"
 }
