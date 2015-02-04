@@ -15,7 +15,7 @@ class Address {
   public $DPVStatus;
 
   /**
-   * @param $tQAAddress
+   * @param QuickAddress $qAddress
    */
   public function __construct($tQAAddress) {
 
@@ -26,6 +26,7 @@ class Address {
 
     if (!is_array($this->atAddressLines)) {
       $this->atAddressLines = array($this->atAddressLines);
+
     }
 
     for ($i = 0; $i < sizeof($this->atAddressLines); $i++) {

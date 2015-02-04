@@ -11,6 +11,7 @@ class QuickAddress {
   public $sConfigFile = "";
   public $sConfigSection = "";
   public $sEngineIntensity = "";
+  public $sDataSetID = "";
   public $iThreshold = 0;
   public $iTimeout = -1;
   public $bFlatten = FALSE;
@@ -82,7 +83,7 @@ class QuickAddress {
           ) . ' LAST RESPONSE: ' . $this->soap->__getLastResponse();
       }
 
-      $message = 'LOG: ' . $log . ' Exception message: ' . $e->getMessage();
+      $message = 'LOG: ' . $log . ' \Exception message: ' . $e->getMessage();
       //     file_put_contents(DRUPAL_ROOT . '/sites/default/log/ws_qas_error.log', $message, FILE_APPEND);
 
       throw new \Exception($message);
@@ -107,7 +108,7 @@ class QuickAddress {
   /**
    * @param $soapResult
    * @return mixed
-   * @throws Exception
+   * @throws \Exception
    */
   public static function check_soap($soapResult) {
     if (is_soap_fault($soapResult)) {
@@ -116,8 +117,7 @@ class QuickAddress {
 
       error_log($err, 0);
 
-      $soapResult = NULL;
-      throw new Exception($err);
+      throw new \Exception($err);
     }
 
     return ($soapResult);
@@ -196,7 +196,7 @@ class QuickAddress {
 
   /**
    * @return array|null
-   * @throws Exception
+   * @throws \Exception
    */
   public function getAllDataSets() {
     $this->build_auth_header();
@@ -225,7 +225,7 @@ class QuickAddress {
   /**
    * @param $sID
    * @return array|null
-   * @throws Exception
+   * @throws \Exception
    */
   public function getAllDataMapDetail($sID) {
     $this->build_auth_header();
@@ -256,7 +256,7 @@ class QuickAddress {
   /**
    * @param $sDataSetID
    * @return array
-   * @throws Exception
+   * @throws \Exception
    */
   public function getLayouts($sDataSetID) {
     $this->build_auth_header();
@@ -289,7 +289,7 @@ class QuickAddress {
    * @param $sLayoutName
    * @param string $sPromptSet
    * @return mixed
-   * @throws Exception
+   * @throws \Exception
    */
   public function canSearch(
     $sDataSetID,
@@ -457,7 +457,7 @@ class QuickAddress {
     }
     $this->sDataSetID = $sDataSetID;
 
-// Concatenate each line of input to a search string delimited by line separator characters
+    // Concatenate each line of input to a search string delimited by line separator characters
     $sSearchString = "";
     $bFirst        = TRUE;
 
@@ -636,7 +636,7 @@ class QuickAddress {
    * @param string $sPromptSet
    * @param string $sEngine
    * @return null|PromptSet
-   * @throws Exception
+   * @throws \Exception
    */
   public function getPromptSet(
     $sDataSetID,
@@ -697,7 +697,7 @@ class QuickAddress {
   /**
    * @param $sDataSetID
    * @return array
-   * @throws Exception
+   * @throws \Exception
    */
   public function getAllLayouts($sDataSetID) {
     if (!$this->soap instanceof \SoapClient) {
@@ -726,7 +726,7 @@ class QuickAddress {
    * @param $sLayoutName
    * @param null $sRequestTag
    * @return Examples
-   * @throws Exception
+   * @throws \Exception
    */
   public function getExampleAddresses(
     $sDataSetID,
@@ -756,7 +756,7 @@ class QuickAddress {
 
   /**
    * @return array|null
-   * @throws Exception
+   * @throws \Exception
    */
   public function getLicenceInfo() {
     if (!$this->soap instanceof \SoapClient) {
@@ -780,7 +780,7 @@ class QuickAddress {
 
   /**
    * @return array|null
-   * @throws Exception
+   * @throws \Exception
    */
   public function getSystemInfo() {
     if (!$this->soap instanceof \SoapClient) {

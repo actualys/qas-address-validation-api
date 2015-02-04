@@ -24,7 +24,7 @@ class Picklist {
 
   /**
    * @param $result
-   * @throws Exception
+   * @throws \Exception
    */
   public function __construct($result) {
     if (QuickAddress::check_soap(
@@ -60,12 +60,18 @@ class Picklist {
   }
 
 
+  /**
+* @return bool
+   */
   public function isAutoStepinSingle() {
     return ($this->iTotal == 1 &&
       $this->atItems[0]->CanStep &&
       !$this->atItems[0]->Information);
   }
 
+  /**
+   * @return bool
+   */
   public function isAutoFormatSingle() {
     return ($this->iTotal == 1 &&
       $this->atItems[0]->FullAddress &&

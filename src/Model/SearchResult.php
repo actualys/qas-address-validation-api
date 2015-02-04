@@ -12,7 +12,7 @@ class SearchResult {
 
   /**
    * @param $result
-   * @throws Exception
+   * @throws \Exception
    */
   public function __construct($result) {
     if (QuickAddress::check_soap($result) != NULL) {
